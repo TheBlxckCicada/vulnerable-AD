@@ -221,9 +221,9 @@ Install-WindowsFeature –Name AD-Domain-Services -IncludeManagementTools
 Add-windowsfeature RSAT-ADDS
 Import-Module ADDSDeployment
 
-$netbiosName = "DC"
-$secpw = ConvertTo-SecureString "Password123" -AsPlainText -Force
-$domainname = $DomainName
+$netbiosName = Read-Host "Enter Netbios Name "
+$secpw = ConvertTo-SecureString "P@ssword123#" -AsPlainText -Force
+$domainname = Read-Host "Enter Domain Name "
 
 Install-ADDSForest -CreateDnsDelegation:$false -DatabasePath "C:\Windows\NTDS" -DomainMode "Win2012" -DomainName $domainname -DomainNetbiosName $netbiosName -ForestMode "Win2012" -InstallDns -LogPath "C:\Windows\NTDS" -NoRebootOnCompletion:$false  -SafeModeAdministratorPassword (Convertto-SecureString -AsPlainText "Vagrant90" -Force) -SysvolPath "C:\Windows\SYSVOL" -Force:$tru
 
@@ -243,7 +243,6 @@ function Invoke-VulnAD {
         $DomainName
     )
     ShowBanner
-    Create-AD
     $Global:Domain = $DomainName
     Set-ADDefaultDomainPasswordPolicy -Identity $Global:Domain -LockoutDuration 00:01:00 -LockoutObservationWindow 00:01:00 -ComplexityEnabled $false -ReversibleEncryptionEnabled $False -MinPasswordLength 4
     VulnAD-AddADUser -limit $UsersLimit
